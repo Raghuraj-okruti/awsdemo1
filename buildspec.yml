@@ -1,0 +1,13 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      -echo Entered the build phase
+      -mvn clean package
+  post build:
+    commands:
+      -echo Build Completed Successfully.
+artifact:
+  files:
+    -target/awsdemo1.jar
+discarded-pahs: yes
