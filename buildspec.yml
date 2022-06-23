@@ -27,5 +27,5 @@ phases:
       - cat imagedefinitions.json
 artifacts:
   files:
+    - imagedefinition.json
     - target/awsdemo1.jar
-discarded-paths: yes
