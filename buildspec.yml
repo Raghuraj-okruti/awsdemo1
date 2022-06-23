@@ -14,17 +14,17 @@ phases:
       - echo Entered the build phase....
       - echo Build Started on'date'.....
       - echo Buildeing Dpcker Image......
-      - docker build -t $REPOSITORY_URI:latest
+      - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build Completed on 'date'
       - echo Pushing the docker image....
       - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:IMAGE_TAG
       - echo Writing image definition file .....
       - printf '[{"name":"awsdemo1","imageUri","%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      -cat imagedefinitions.json
+      - cat imagedefinitions.json
 artifacts:
   files:
     - target/awsdemo1.jar
