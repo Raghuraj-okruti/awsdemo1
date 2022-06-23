@@ -28,4 +28,4 @@ phases:
 artifacts:
   files:
     - target/awsdemo1.jar
-discarded-pahs: yes
+discarded-paths: yes
