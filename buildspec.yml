@@ -9,7 +9,8 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
       - REPOSITORY_URI=602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F :'{print $2}')
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+#      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F :'{print $2}')
   build:
     commands:
       - echo Entered the build phase....
