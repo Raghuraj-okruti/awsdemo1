@@ -22,7 +22,7 @@ phases:
     commands:
       - echo Entered the build phase....
       - echo Build Started on 'date'
-      - sudo service docker start
+      - systemctl start docker
       - echo Buildeing Docker Image......
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:$IMAGE_TAG
