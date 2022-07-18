@@ -29,6 +29,7 @@ phases:
 #      - docker tag $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
       - echo Build Completed on 'date'
       - echo Pushing the docker image....
       - docker push 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo/awsdemo1:$IMAGE_TAG
