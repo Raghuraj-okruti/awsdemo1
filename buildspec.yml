@@ -1,11 +1,11 @@
 version: 0.2
 phases:
-#  install:
-#      runtime-versions:
-#          docker: 18
-#      commands:
-#        - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
-#        - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+  install:
+      runtime-versions:
+          docker: 18
+      commands:
+        - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+        - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   pre_build:
     commands:
       - mvn clean install
@@ -21,7 +21,7 @@ phases:
     commands:
       - echo Entered the build phase....
       - echo Build Started on 'date'
-      - echo Buildeing Dpcker Image......
+      - echo Buildeing Docker Image......
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:$IMAGE_TAG
   post_build:
