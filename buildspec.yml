@@ -1,44 +1,47 @@
 version: 0.2
+env:
+  shell: bash
 phases:
   install:
       runtime-versions:
           docker: 20
       commands:
         - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+        - docker ps
 #        - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   pre_build:
     commands:
-      - mvn clean install
-      - echo Logging into Amazon ECR....
-      - aws --version
-      - $(aws ecr get-login --region ap-south-1 --no-include-email)
-      - aws sts get-caller-identity
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
-      - REPOSITORY_URI=602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
-#      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F :'{print $2}')
+#      - mvn clean install
+#      - echo Logging into Amazon ECR....
+#      - aws --version
+#      - $(aws ecr get-login --region ap-south-1 --no-include-email)
+#      - aws sts get-caller-identity
+#      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
+#      - REPOSITORY_URI=602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
+#      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+#      - IMAGE_TAG=${COMMIT_HASH:=latest}
+##      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F :'{print $2}')
   build:
     commands:
-      - echo Entered the build phase....
-      - echo Build Started on 'date'
-      - echo Building Docker Image......
-#      - docker build --rm -f codebuild/Dockerfile.awsdemo1 -t aws-demo1-ecr-repo/awsdemo1:$IMAGE_TAG -t awsdemo1-ecr-repo/awsdemo1:$CODEBUILD_BUILD_NUMBER .
-      - docker build -t $REPOSITORY_URI:latest .
-#      - docker tag awsdemo1-ecr-repo/awsdemo1:$IMAGE_TAG 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo/awsdemo1:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI:$IMAGE_TAG
+#      - echo Entered the build phase....
+#      - echo Build Started on 'date'
+#      - echo Building Docker Image......
+##      - docker build --rm -f codebuild/Dockerfile.awsdemo1 -t aws-demo1-ecr-repo/awsdemo1:$IMAGE_TAG -t awsdemo1-ecr-repo/awsdemo1:$CODEBUILD_BUILD_NUMBER .
+#      - docker build -t $REPOSITORY_URI:latest .
+##      - docker tag awsdemo1-ecr-repo/awsdemo1:$IMAGE_TAG 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo/awsdemo1:$IMAGE_TAG
+#      - docker tag $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
+#      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
       - echo Build Completed on 'date'
       - echo Pushing the docker image....
 #      - docker push 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo/awsdemo1:$IMAGE_TAG
 #      - docker push 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo/awsdemo1:$CODEBUILD_BUILD_NUMBER
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:IMAGE_TAG
-      - echo Writing image definition file .....
-      - printf '[{"name":"awsdemo1","imageUri","%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - cat imagedefinitions.json
+#      - docker push $REPOSITORY_URI:latest
+#      - docker push $REPOSITORY_URI:IMAGE_TAG
+#      - echo Writing image definition file .....
+#      - printf '[{"name":"awsdemo1","imageUri","%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+#      - cat imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
