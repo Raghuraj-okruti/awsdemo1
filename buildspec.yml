@@ -26,19 +26,13 @@ phases:
       - echo Entered the build phase....
       - echo Build Started on 'date'
       - echo Building Docker Image......
-#      - docker build --rm -f Dockerfile -t awsdemo1-ecr-repo:$IMAGE_TAG -t awsdemo1-ecr-repo:$CODEBUILD_BUILD_NUMBER .
       - docker build -t $REPOSITORY_URI:latest .
-#      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
-#      - docker tag $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo
       - echo Build Completed on 'date'
       - echo Pushing the docker image....
-#      - docker push 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo/awsdemo1:$IMAGE_TAG
-#      - docker push 602143770054.dkr.ecr.ap-south-1.amazonaws.com/awsdemo1-ecr-repo/awsdemo1:$CODEBUILD_BUILD_NUMBER
       - docker push $REPOSITORY_URI:latest
-#      - docker push $REPOSITORY_URI:IMAGE_TAG
       - echo Writing image definition file .....
       - printf '[{"name":"awsdemo1","imageUri","%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
